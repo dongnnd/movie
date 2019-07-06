@@ -18,6 +18,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
 public class NetworkUntil {
 
     private static final String URL_TOP_RATE = "http://api.themoviedb.org/3/discover/movie?sort_by=vote_average.desc&api_key=";
@@ -25,16 +27,16 @@ public class NetworkUntil {
     private static final String URL_UPCOMING = "";
     private static final String KEY = "5f52f0db3d481dc34ba444bf202c5120";
 
-    public static void getMovieFromServer(AppContants.MovieType type, Context context, final IVolleyResultCallBack callBack) {
+    public static void getMovieFromServer(int type, Context context, final IVolleyResultCallBack callBack) {
         String url = "";
         switch (type) {
-            case POPULAR:
+            case AppContants.MovieType.POPULAR:
                 url = URL_POPULAR;
                 break;
-            case TOP_RATE:
+            case AppContants.MovieType.TOP_RATE:
                 url = URL_TOP_RATE;
                 break;
-            case UPCOMMING:
+            case AppContants.MovieType.UPCOMMING:
                 url = URL_UPCOMING;
                 break;
         }
@@ -60,7 +62,7 @@ public class NetworkUntil {
         VolleySingleton.getInstance(context).addToRequestQueue(request);
     }
 
-    public static List<Movie> parseJson(JSONArray jsonArray) {
+    public static List<Movie> parseJson(JSONArray jsonArray, int movieType) {
         List<Movie> lists = new ArrayList<>();
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -76,6 +78,7 @@ public class NetworkUntil {
                 movie.setOverview(jsonObject.getString("overview"));
                 movie.setReleaseDate(jsonObject.getString("release_date"));
                 movie.setPosterPath(jsonObject.getString("poster_path"));
+                movie.setMovieType(movieType);
                 lists.add(movie);
             }
         } catch (JSONException e) {

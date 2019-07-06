@@ -11,10 +11,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.example.movie.R;
 import com.example.movie.model.Movie;
+import com.example.movie.uitil.AppContants;
 import com.example.movie.viewmodel.FileListController;
 import com.example.movie.viewmodel.MainController;
 
@@ -27,20 +29,24 @@ public class FileListFragment extends Fragment {
     private RecyclerView mListView;
     private View rootView;
     private static final int COLUMN_GRID = 2;
-    private ProgressBar mProcessBar;
+    private LinearLayout mProcessLayout;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mController = new MainController(getActivity().getApplication());
         observerListMovie();
+        mController.loadingMovie(AppContants.MovieType.TOP_RATE, -1);
+    }
+
+    public void setArguments(MainController controller) {
+        mController = controller;
     }
 
     private void observerListMovie(){
         mController.getListMovie().observe(this, new Observer<List<Movie>>() {
             @Override
             public void onChanged(@Nullable List<Movie> movies) {
-                mProcessBar.setVisibility(View.GONE);
+                mProcessLayout.setVisibility(View.GONE);
                 mListView.setVisibility(View.VISIBLE);
                 mAdapter.updateList(movies);
             }
@@ -51,7 +57,6 @@ public class FileListFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.file_list_fragment, container, false);
-        initRecyclerView();
         return rootView;
     }
 
@@ -61,12 +66,13 @@ public class FileListFragment extends Fragment {
         mListView.setLayoutManager(new GridLayoutManager(getContext(), COLUMN_GRID));
         mAdapter = new FileListAdapter(getContext());
         mListView.setAdapter(mAdapter);
-        mProcessBar = rootView.findViewById(R.id.progress_bar);
+        mProcessLayout = rootView.findViewById(R.id.process_layout);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        initRecyclerView();
     }
 
 

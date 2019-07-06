@@ -1,5 +1,7 @@
 package com.example.movie.view.activity;
 
+import android.arch.lifecycle.AndroidViewModel;
+import android.arch.lifecycle.ViewModelProviders;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
@@ -30,15 +32,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initDrawerLayout();
 
-        mController = new MainController(getApplication());
+        mController = ViewModelProviders.of(this).get(MainController.class);
         openFileListFragment();
     }
 
-    private void openFileListFragment(){
-        FileListFragment newFragment = new FileListFragment();
+    private void openFileListFragment() {
+        FileListFragment listFile = new FileListFragment();
+        listFile.setArguments(mController);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-        transaction.replace(R.id.fragment_container, newFragment);
+        transaction.replace(R.id.fragment_container, listFile);
         transaction.addToBackStack(null);
         transaction.commit();
     }
@@ -46,12 +49,12 @@ public class MainActivity extends AppCompatActivity {
     private void initDrawerLayout() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(navListener);
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+        mNavView = findViewById(R.id.nav_view);
+        mNavView.setNavigationItemSelectedListener(navListener);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
+                this, mDrawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
 
@@ -59,11 +62,19 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+        if(closeDrawer()) return;
+        super.onBackPressed();
+
+    }
+
+    private boolean closeDrawer() {
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)){
             mDrawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+            return true;
+
         }
+        return false;
+
     }
 
     NavigationView.OnNavigationItemSelectedListener navListener = new NavigationView.OnNavigationItemSelectedListener() {
@@ -73,12 +84,15 @@ public class MainActivity extends AppCompatActivity {
             switch (id) {
                 case R.id.nav_top_rate:
                     mController.loadingPage(AppContants.MovieType.TOP_RATE);
+                    closeDrawer();
                     break;
                 case R.id.nav_popular:
                     mController.loadingPage(AppContants.MovieType.POPULAR);
+                    closeDrawer();
                     break;
                 case R.id.nav_upcoming:
                     mController.loadingPage(AppContants.MovieType.UPCOMMING);
+                    closeDrawer();
                     break;
 
             }

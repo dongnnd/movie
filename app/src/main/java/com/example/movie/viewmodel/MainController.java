@@ -8,10 +8,13 @@ import android.content.Context;
 import android.os.Looper;
 import android.util.Log;
 
+import com.example.movie.database.AppDatabase;
+import com.example.movie.database.MovieRepository;
 import com.example.movie.model.Movie;
 import com.example.movie.network.IVolleyResultCallBack;
 import com.example.movie.network.NetworkUntil;
 import com.example.movie.uitil.AppContants;
+import com.example.movie.uitil.ThreadExecutor;
 
 import org.json.JSONArray;
 
@@ -26,14 +29,21 @@ public class MainController extends AndroidViewModel {
 
     private static final int CORE_POOL_SIZE = 1;
     private Context mContext;
+    private MovieRepository mRepository;
     private MutableLiveData<List<Movie>> mListMovie = new MutableLiveData<>();
+
+    private int mLoadedPopuler = -1;
+    private int mLoadedTopRate = -1;
+    private int mLoadedUpcoming = -1;
 
     public MainController(Application application) {
         super(application);
         mContext = application;
+        AppDatabase database = AppDatabase.getInstance(application);
+        mRepository = MovieRepository.getInstance(database.getMovieDao());
     }
 
-    public void loadingPage(final AppContants.MovieType type) {
+    public void loadingPage(final int type) {
         final ExecutorService executor = Executors.newFixedThreadPool(CORE_POOL_SIZE);
         IVolleyResultCallBack callBack = new IVolleyResultCallBack() {
             @Override
@@ -41,7 +51,7 @@ public class MainController extends AndroidViewModel {
                 Callable<Void> parseJson = new Callable<Void>() {
                     @Override
                     public Void call() throws Exception {
-                        List<Movie> listMovie = NetworkUntil.parseJson(jsonArray);
+                        List<Movie> listMovie = NetworkUntil.parseJson(jsonArray, type);
                         mListMovie.postValue(listMovie);
                         // insert database
                         return null;
@@ -61,9 +71,44 @@ public class MainController extends AndroidViewModel {
 
     }
 
+    public void loadingMovie(final int type, final int section){
+        final IDataCallBack callBack = new IDataCallBack() {
+            @Override
+            public void loadSuccess(List<Movie> list) {
+                mListMovie.postValue(list);
+                insertMovie(list, type);
+            }
+
+            @Override
+            public void loadFail(String error) {
+
+            }
+        };
+        Callable<Void> loadTask = new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                mRepository.loadListMovie(type, section, callBack, mContext);
+                return null;
+            }
+        };
+        ThreadExecutor.getInstance().addTask(loadTask);
+    }
+
 
     public LiveData<List<Movie>> getListMovie(){
         return mListMovie;
+    }
+
+    private void insertMovie(final List<Movie> movieList, final int movieType){
+        Callable insertTask = new Callable() {
+            @Override
+            public Object call() throws Exception {
+                mRepository.deleteListMovie(movieType);
+                mRepository.insertListMovie(movieList);
+                return null;
+            }
+        };
+        ThreadExecutor.getInstance().addTask(insertTask);
     }
 
 }

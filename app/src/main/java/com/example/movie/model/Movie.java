@@ -1,7 +1,12 @@
 package com.example.movie.model;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+
+@Entity(tableName = "movie")
 public class Movie {
 
+    @PrimaryKey
     private int idMovie;
     private  int voteAverage;
     private int voteCount;
@@ -12,6 +17,7 @@ public class Movie {
     private String overview;
     private String releaseDate;
     private String posterPath;
+    private int movieType;
 
     public int getIdMovie() {
         return idMovie;
@@ -91,5 +97,13 @@ public class Movie {
 
     public void setPosterPath(String posterPath) {
         this.posterPath = posterPath;
+    }
+
+    public int getMovieType() {
+        return movieType;
+    }
+
+    public void setMovieType(int movieType) {
+        this.movieType = movieType;
     }
 }
