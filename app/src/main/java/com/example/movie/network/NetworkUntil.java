@@ -1,7 +1,8 @@
 package com.example.movie.network;
 
 import android.content.Context;
-import android.os.Looper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -15,6 +16,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +29,8 @@ public class NetworkUntil {
 
     private static final String URL_TOP_RATE = "http://api.themoviedb.org/3/discover/movie?sort_by=vote_average.desc&api_key=";
     private static final String URL_POPULAR = "http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=";
-    private static final String URL_UPCOMING = "";
+    private static final String URL_UPCOMING = "https://image.tmdb.org/t/p/w185";
+    private static final String URL_BASE = "https://image.tmdb.org/t/p/w185";
     private static final String KEY = "5f52f0db3d481dc34ba444bf202c5120";
 
     public static void getMovieFromServer(int type, Context context, final IVolleyResultCallBack callBack) {
@@ -83,8 +89,24 @@ public class NetworkUntil {
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.e("dong.nd1", "Erro occurred during JSON Parsing");
+            Log.e("dong.nd1", "Error occurred during JSON Parsing");
         }
         return lists;
+    }
+
+    public static Bitmap getThumbnailFromUrl(String sUrl){
+        String url = URL_BASE + sUrl;
+        try {
+            URL u = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) u.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return myBitmap;
+        } catch (IOException e) {
+            Log.d("dong.nd1", e.toString());
+            return null;
+        }
     }
 }

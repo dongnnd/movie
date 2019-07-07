@@ -11,13 +11,15 @@ import java.util.concurrent.TimeUnit;
 
 public class ThreadExecutor {
 
-    private int corePoolSize = 1;
+    private int corePoolSizeForThumbnail = 4;
+    private int corePoolSizeForLoadMovie = 1;
     private int maxPoolSize = 100;
     private long keepAlive = 5000;
     private TimeUnit unit = TimeUnit.SECONDS;
-    private BlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<Runnable>(corePoolSize, true);
+    private BlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<Runnable>(corePoolSizeForThumbnail, true);
     private RejectedExecutionHandler handler = new ThreadPoolExecutor.CallerRunsPolicy();
-    private ExecutorService mService;
+    private ExecutorService mServiceLoadMovie;
+    private ExecutorService mServiceLoadThumbnail;
 
     private static ThreadExecutor mInstance;
 
@@ -30,10 +32,15 @@ public class ThreadExecutor {
     }
 
     public ThreadExecutor(){
-        mService = new ThreadPoolExecutor(corePoolSize, maxPoolSize, keepAlive, unit, workQueue, handler);
+        mServiceLoadMovie = Executors.newFixedThreadPool(corePoolSizeForLoadMovie);
+        mServiceLoadThumbnail = new ThreadPoolExecutor(corePoolSizeForThumbnail, maxPoolSize, keepAlive, unit, workQueue, handler);
     }
 
-    public void addTask(Callable callable){
-        mService.submit(callable);
+    public void addTaskLoadMovie(Callable callable){
+        mServiceLoadMovie.submit(callable);
+    }
+
+    public void addTaskLoadThumbnail(Callable callable){
+        mServiceLoadThumbnail.submit(callable);
     }
 }

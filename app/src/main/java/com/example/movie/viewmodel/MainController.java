@@ -91,7 +91,7 @@ public class MainController extends AndroidViewModel {
                 return null;
             }
         };
-        ThreadExecutor.getInstance().addTask(loadTask);
+        ThreadExecutor.getInstance().addTaskLoadMovie(loadTask);
     }
 
 
@@ -108,7 +108,7 @@ public class MainController extends AndroidViewModel {
                 return null;
             }
         };
-        ThreadExecutor.getInstance().addTask(insertTask);
+        ThreadExecutor.getInstance().addTaskLoadMovie(insertTask);
     }
 
 }

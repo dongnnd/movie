@@ -20,4 +20,7 @@ public interface MovieDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long[] insertListPlan(List<Movie> lists);
+
+    @Query("SELECT * FROM movie WHERE idMovie = :id")
+    Movie getMovieWithId(int id);
 }

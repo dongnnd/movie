@@ -51,7 +51,7 @@ public class MovieRepository {
                            return null;
                         }
                     };
-                    ThreadExecutor.getInstance().addTask(parseJson);
+                    ThreadExecutor.getInstance().addTaskLoadMovie(parseJson);
                 }
 
                 @Override
@@ -81,5 +81,9 @@ public class MovieRepository {
 
     public void deleteListMovie(int type){
         mMovieDao.deleteListMovieType(type);
+    }
+
+    public Movie getMovieWithId(int id){
+        return mMovieDao.getMovieWithId(id);
     }
 }

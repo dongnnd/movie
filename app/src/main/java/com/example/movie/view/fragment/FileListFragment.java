@@ -35,7 +35,7 @@ public class FileListFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         observerListMovie();
-        mController.loadingMovie(AppContants.MovieType.TOP_RATE, -1);
+        mController.loadingMovie(AppContants.MovieType.POPULAR, -1);
     }
 
     public void setArguments(MainController controller) {
