@@ -29,7 +29,7 @@ public class NetworkUntil {
 
     private static final String URL_TOP_RATE = "http://api.themoviedb.org/3/discover/movie?sort_by=vote_average.desc&api_key=";
     private static final String URL_POPULAR = "http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=";
-    private static final String URL_UPCOMING = "https://image.tmdb.org/t/p/w185";
+    private static final String URL_UPCOMING = "http://api.themoviedb.org/3/discover/movie?sort_by=top_rated.desc&api_key=";
     private static final String URL_BASE = "https://image.tmdb.org/t/p/w185";
     private static final String KEY = "5f52f0db3d481dc34ba444bf202c5120";
 

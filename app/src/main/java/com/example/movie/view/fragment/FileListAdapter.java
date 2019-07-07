@@ -59,9 +59,9 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ItemHo
         itemHolder.imgIcon.getLayoutParams().height = mItemHeight;
 
         // score
-        int score = movie.getVoteCount();
+        int score = movie.getVoteCount()%6;
         for (int n = 0; n < score; n++) {
-            //itemHolder.scoreID[n].setColorFilter(Color.RED);
+            itemHolder.scoreID[n].setColorFilter(Color.RED);
         }
         if(movie.getPosterPath() == null){
             Log.d("dong.nd1", "NULL");
