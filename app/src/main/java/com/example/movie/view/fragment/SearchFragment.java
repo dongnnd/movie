@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.example.movie.R;
 import com.example.movie.model.Movie;
+import com.example.movie.network.NetworkUntil;
 import com.example.movie.viewmodel.SearchController;
 
 import java.util.List;
@@ -35,6 +36,7 @@ public class SearchFragment extends Fragment {
         super.onAttach(context);
         observerSearchList();
         observerSearchText();
+        observerSearchErrorType();
     }
 
     private void observerSearchList(){
@@ -70,6 +72,21 @@ public class SearchFragment extends Fragment {
                 mProcessBar.setVisibility(View.VISIBLE);
                 mListItem.setVisibility(View.GONE);
                 mEmptyView.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    private void observerSearchErrorType(){
+        mController.getSearchErrorType().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(@Nullable Integer integer) {
+                String errorText = "";
+                if (integer == 1){
+                    errorText = getContext().getString(R.string.empty_result_search);
+                }else{
+                    errorText = NetworkUntil.getVolleyErrorMessage(integer);
+                }
+                mEmptyView.setText(errorText);
             }
         });
     }

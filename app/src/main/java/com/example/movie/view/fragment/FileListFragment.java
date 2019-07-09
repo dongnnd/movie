@@ -13,14 +13,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.movie.R;
 import com.example.movie.model.Movie;
 import com.example.movie.network.NetworkUntil;
 import com.example.movie.uitil.AppContants;
-import com.example.movie.viewmodel.FileListController;
 import com.example.movie.viewmodel.MainController;
 
 import java.util.List;
@@ -57,16 +55,17 @@ public class FileListFragment extends Fragment {
         mController.getListMovie().observe(this, new Observer<List<Movie>>() {
             @Override
             public void onChanged(@Nullable List<Movie> movies) {
-                Log.d("dong.nd1", "Run here");
+
                 if(movies != null){
                     mProcessLayout.setVisibility(View.GONE);
                     mListView.setVisibility(View.VISIBLE);
                     mEmptyView.setVisibility(View.GONE);
                     mAdapter.updateList(movies);
                 }else {
+                    Log.d("dong.nd1", "Run here");
                     mProcessLayout.setVisibility(View.GONE);
                     mListView.setVisibility(View.GONE);
-                    mListView.setVisibility(View.VISIBLE);
+                    mEmptyView.setVisibility(View.VISIBLE);
                 }
 
             }
@@ -77,6 +76,7 @@ public class FileListFragment extends Fragment {
         mController.getErrorVolleyType().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(@Nullable Integer integer) {
+                Log.d("dong.nd1", "Run here");
                 mEmptyView.setText(NetworkUntil.getVolleyErrorMessage(integer));
             }
         });

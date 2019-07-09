@@ -12,4 +12,7 @@
 
 
     <string name="process_bar_loading">Loading...</string>
+    <string name="process_bar_searching">Searching</string>
+
+    <string name="empty_result_search">No have move that name.</string>
 </resources>

@@ -192,6 +192,7 @@ public class MainActivity extends AppCompatActivity {
                 public boolean onQueryTextChange(final String newText) {
                     if(!NetworkUntil.isConnectedToNetwork(getApplication())){
                         mSearchController.setSearchText(null);
+                        mSearchController.setSearchErrorType(-1);
                         NetworkUntil.showToastErrorNetwork(getApplication());
                         return true;
                     }

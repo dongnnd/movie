@@ -163,7 +163,7 @@ public class NetworkUntil {
         return message;
     }
 
-    public static void searchInServer(String str, Context context,final IVolleyResultCallBack callBack){
+    public static void searchInServer(final String str, Context context, final IVolleyResultCallBack callBack){
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, URL_SEARCH+str, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -180,7 +180,7 @@ public class NetworkUntil {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("dong.nd1", "Search error: " + error.toString());
+                callBack.loadFail(getVolleyErrorType(error));
             }
         });
 
