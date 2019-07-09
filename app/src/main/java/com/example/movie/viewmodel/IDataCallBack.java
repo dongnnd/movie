@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface IDataCallBack {
     void loadSuccess(List<Movie> listMovie);
-    void loadFail(String error);
+    void loadFail(int errorType);
 }

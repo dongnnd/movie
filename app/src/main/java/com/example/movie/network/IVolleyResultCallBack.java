@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface IVolleyResultCallBack {
     void loadSuccess(JSONArray jsonArray);
-    void loadFail(String error);
+    void loadFail(int errorType);
 }

@@ -46,7 +46,7 @@ public class MovieRepository {
                            if(listMovie != null){
                                callBack.loadSuccess(listMovie);
                            }else{
-                               callBack.loadFail("Can't parse Json");
+                               callBack.loadFail(AppContants.VooleyError.ParseError);
                            }
                            return null;
                         }
@@ -55,22 +55,18 @@ public class MovieRepository {
                 }
 
                 @Override
-                public void loadFail(String error) {
-                    callBack.loadFail("Server error");
+                public void loadFail(int errorType) {
+                    callBack.loadFail(errorType);
                 }
             };
-            if(Looper.getMainLooper() == Looper.myLooper()){
-                Log.d("dong.nd1", "Main");
-            }else{
-                Log.d("dong.nd1", "Not main");
-            }
+
             NetworkUntil.getMovieFromServer(movieType, context, volleyCallBack);
         }else{
             List<Movie> movieList = mMovieDao.getListMovieType(1);
             if(movieList != null){
                 callBack.loadSuccess(movieList);
             }else{
-                callBack.loadFail("Empty database");
+                callBack.loadFail(-1);
             }
         }
     }

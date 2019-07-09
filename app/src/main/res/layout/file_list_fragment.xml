@@ -5,10 +5,12 @@
     android:orientation="vertical"
     android:background="@color/background_list">
 
+
     <LinearLayout
         android:id="@+id/process_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
         android:orientation="vertical"
         android:gravity="center">
         <ProgressBar
@@ -23,10 +25,16 @@
             android:text="@string/process_bar_loading"/>
     </LinearLayout>
 
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list_view"
         android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+
+    <TextView
+        android:id="@+id/empty_view"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"/>
 </LinearLayout>

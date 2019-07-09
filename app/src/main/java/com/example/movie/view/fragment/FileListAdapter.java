@@ -17,7 +17,6 @@ import com.example.movie.R;
 import com.example.movie.model.Movie;
 import com.example.movie.uitil.ThumbnailMrg;
 
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +65,6 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ItemHo
         if(movie.getPosterPath() == null){
             Log.d("dong.nd1", "NULL");
         }
-        Log.d("dong.nd1", "Pos: " + i + " Path: " + movie.getPosterPath());
         //if(i == 0){
             ThumbnailMrg.getInstance(mContext).loadThumbnail(movie.getIdMovie(), movie.getPosterPath(), itemHolder.imgIcon);
         //}

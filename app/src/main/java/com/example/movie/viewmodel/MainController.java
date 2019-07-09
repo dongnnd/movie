@@ -18,6 +18,7 @@ import com.example.movie.uitil.ThreadExecutor;
 
 import org.json.JSONArray;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -31,6 +32,7 @@ public class MainController extends AndroidViewModel {
     private Context mContext;
     private MovieRepository mRepository;
     private MutableLiveData<List<Movie>> mListMovie = new MutableLiveData<>();
+    private MutableLiveData<Integer> mErrorVollayType = new MutableLiveData<>();
 
     private int mLoadedPopuler = -1;
     private int mLoadedTopRate = -1;
@@ -63,8 +65,9 @@ public class MainController extends AndroidViewModel {
             }
 
             @Override
-            public void loadFail(String error) {
-                Log.d("dong.nd1", "Load fail: " + error);
+            public void loadFail(int errorType) {
+                List<Movie> list = new ArrayList<>();
+                mListMovie.postValue(list);
             }
         };
         NetworkUntil.getMovieFromServer(type, mContext, callBack);
@@ -80,8 +83,9 @@ public class MainController extends AndroidViewModel {
             }
 
             @Override
-            public void loadFail(String error) {
-
+            public void loadFail(int errorType) {
+                mErrorVollayType.setValue(errorType);
+                mListMovie.postValue(null);
             }
         };
         Callable<Void> loadTask = new Callable<Void>() {
@@ -97,6 +101,10 @@ public class MainController extends AndroidViewModel {
 
     public LiveData<List<Movie>> getListMovie(){
         return mListMovie;
+    }
+
+    public LiveData<Integer> getErrorVolleyType(){
+        return mErrorVollayType;
     }
 
     private void insertMovie(final List<Movie> movieList, final int movieType){

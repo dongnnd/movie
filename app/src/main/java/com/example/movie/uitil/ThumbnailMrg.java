@@ -63,7 +63,6 @@ public class ThumbnailMrg {
 
 
                 if(bitmapArray != null){
-                    Log.d("dong.nd1", "Jump1");
                     bitmap = BitmapFactory.decodeByteArray(bitmapArray, 0, bitmapArray.length);
                 }
                 if(bitmap == null){
