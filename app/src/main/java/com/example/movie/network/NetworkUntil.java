@@ -180,6 +180,7 @@ public class NetworkUntil {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Log.d("dong.nd1", "B");
                 callBack.loadFail(getVolleyErrorType(error));
             }
         });

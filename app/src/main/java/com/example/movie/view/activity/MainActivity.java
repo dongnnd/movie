@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -88,7 +89,8 @@ public class MainActivity extends AppCompatActivity {
         FileListFragment listFile = new FileListFragment();
         listFile.setArguments(mController);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, listFile);
+        transaction.replace(R.id.fragment_container, listFile, FileListFragment.FILE_LIST_TAG);
+        transaction.addToBackStack(FileListFragment.FILE_LIST_TAG);
         transaction.commit();
     }
 
@@ -135,22 +137,29 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
             int id = menuItem.getItemId();
+            FragmentManager fm = getSupportFragmentManager();
+            if(fm != null && fm.getBackStackEntryAt(fm.getBackStackEntryCount()-1).getName().equals(SearchFragment.SEARCH_TAG)){
+                if (!mSearchView.isIconified())
+                    mSearchView.onActionViewCollapsed();
+                fm.popBackStack();
+            }
+            mController.setListMovie(null);
             switch (id) {
                 case R.id.nav_top_rate:
                     mCurrentListType = AppContants.MovieType.TOP_RATE;
-                    mController.loadingPage(AppContants.MovieType.TOP_RATE);
+                    mController.loadingMovie(AppContants.MovieType.TOP_RATE, -1);
                     menuItem.setChecked(true);
                     closeDrawer();
                     break;
                 case R.id.nav_popular:
                     mCurrentListType = AppContants.MovieType.POPULAR;
-                    mController.loadingPage(AppContants.MovieType.POPULAR);
+                    mController.loadingMovie(AppContants.MovieType.POPULAR, -1);
                     menuItem.setChecked(true);
                     closeDrawer();
                     break;
                 case R.id.nav_upcoming:
                     mCurrentListType = AppContants.MovieType.UPCOMMING;
-                    mController.loadingPage(AppContants.MovieType.UPCOMMING);
+                    mController.loadingMovie(AppContants.MovieType.UPCOMMING, -1);
                     menuItem.setChecked(true);
                     closeDrawer();
                     break;
@@ -171,7 +180,6 @@ public class MainActivity extends AppCompatActivity {
             mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
                 @Override
                 public boolean onClose() {
-                    Log.d("dong.nd1","End");
                     endSearch();
                     return false;
                 }
@@ -192,7 +200,8 @@ public class MainActivity extends AppCompatActivity {
                 public boolean onQueryTextChange(final String newText) {
                     if(!NetworkUntil.isConnectedToNetwork(getApplication())){
                         mSearchController.setSearchText(null);
-                        mSearchController.setSearchErrorType(-1);
+                        mSearchController.setSearchErrorType(AppContants.VooleyError.NoConnectionError);
+                        mSearchController.setSearchList(null);
                         NetworkUntil.showToastErrorNetwork(getApplication());
                         return true;
                     }
@@ -241,8 +250,8 @@ public class MainActivity extends AppCompatActivity {
         }
         searchFragment.setArguments(mSearchController);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, searchFragment);
-        transaction.addToBackStack(null);
+        transaction.replace(R.id.fragment_container, searchFragment, SearchFragment.SEARCH_TAG);
+        transaction.addToBackStack(SearchFragment.SEARCH_TAG);
         transaction.commit();
     }
 

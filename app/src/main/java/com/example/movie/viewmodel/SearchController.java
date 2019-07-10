@@ -46,8 +46,8 @@ public class SearchController extends AndroidViewModel implements IVolleyResultC
                 List<Movie> listMovie = NetworkUntil.parseJson(jsonArray, -1);
                 mSearchList.postValue(listMovie);
                 if(listMovie.size() == 0){
-                    Log.d("dong.nd1", "A");
-                    mSearchErrorType.setValue(1);
+                    mSearchList.postValue(null);
+                    mSearchErrorType.postValue(0);
                 }
                 return null;
             }
@@ -58,7 +58,8 @@ public class SearchController extends AndroidViewModel implements IVolleyResultC
 
     @Override
     public void loadFail(int errorType) {
-        Log.d("dong.nd1", "BBB");
+        Log.d("dong.nd1", "Fail");
+        mSearchList.setValue(null);
         mSearchErrorType.setValue(errorType);
     }
 

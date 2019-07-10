@@ -25,6 +25,8 @@ import java.util.List;
 
 public class FileListFragment extends Fragment {
 
+    public static final String FILE_LIST_TAG = "file_list_tag";
+
     private MainController mController;
     private FileListAdapter mAdapter;
     private RecyclerView mListView;
@@ -62,7 +64,6 @@ public class FileListFragment extends Fragment {
                     mEmptyView.setVisibility(View.GONE);
                     mAdapter.updateList(movies);
                 }else {
-                    Log.d("dong.nd1", "Run here");
                     mProcessLayout.setVisibility(View.GONE);
                     mListView.setVisibility(View.GONE);
                     mEmptyView.setVisibility(View.VISIBLE);

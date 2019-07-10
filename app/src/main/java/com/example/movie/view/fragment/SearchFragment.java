@@ -24,6 +24,8 @@ import java.util.List;
 
 public class SearchFragment extends Fragment {
 
+    public static final String SEARCH_TAG = "search_tag";
+
     private View mRootView;
     private SearchController mController;
     private SearchAdapter mAdapter;
@@ -81,7 +83,7 @@ public class SearchFragment extends Fragment {
             @Override
             public void onChanged(@Nullable Integer integer) {
                 String errorText = "";
-                if (integer == 1){
+                if (integer == 0){
                     errorText = getContext().getString(R.string.empty_result_search);
                 }else{
                     errorText = NetworkUntil.getVolleyErrorMessage(integer);

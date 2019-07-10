@@ -45,34 +45,34 @@ public class MainController extends AndroidViewModel {
         mRepository = MovieRepository.getInstance(database.getMovieDao());
     }
 
-    public void loadingPage(final int type) {
-        final ExecutorService executor = Executors.newFixedThreadPool(CORE_POOL_SIZE);
-        IVolleyResultCallBack callBack = new IVolleyResultCallBack() {
-            @Override
-            public void loadSuccess(final JSONArray jsonArray) {
-                Callable<Void> parseJson = new Callable<Void>() {
-                    @Override
-                    public Void call() throws Exception {
-                        List<Movie> listMovie = NetworkUntil.parseJson(jsonArray, type);
-                        mListMovie.postValue(listMovie);
-                        // insert database
-                        return null;
-                    }
-                };
-                executor.submit(parseJson);
-
-
-            }
-
-            @Override
-            public void loadFail(int errorType) {
-                List<Movie> list = new ArrayList<>();
-                mListMovie.postValue(list);
-            }
-        };
-        NetworkUntil.getMovieFromServer(type, mContext, callBack);
-
-    }
+//    public void loadingPage(final int type) {
+//        final ExecutorService executor = Executors.newFixedThreadPool(CORE_POOL_SIZE);
+//        IVolleyResultCallBack callBack = new IVolleyResultCallBack() {
+//            @Override
+//            public void loadSuccess(final JSONArray jsonArray) {
+//                Callable<Void> parseJson = new Callable<Void>() {
+//                    @Override
+//                    public Void call() throws Exception {
+//                        List<Movie> listMovie = NetworkUntil.parseJson(jsonArray, type);
+//                        mListMovie.postValue(listMovie);
+//                        // insert database
+//                        return null;
+//                    }
+//                };
+//                executor.submit(parseJson);
+//
+//
+//            }
+//
+//            @Override
+//            public void loadFail(int errorType) {
+//                List<Movie> list = new ArrayList<>();
+//                mListMovie.postValue(list);
+//            }
+//        };
+//        NetworkUntil.getMovieFromServer(type, mContext, callBack);
+//
+//    }
 
     public void loadingMovie(final int type, final int section){
         final IDataCallBack callBack = new IDataCallBack() {
@@ -101,6 +101,10 @@ public class MainController extends AndroidViewModel {
 
     public LiveData<List<Movie>> getListMovie(){
         return mListMovie;
+    }
+
+    public void setListMovie(List<Movie> listMovie){
+        mListMovie.setValue(listMovie);
     }
 
     public LiveData<Integer> getErrorVolleyType(){
