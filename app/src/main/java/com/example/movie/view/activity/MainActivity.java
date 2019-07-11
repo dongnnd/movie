@@ -114,13 +114,15 @@ public class MainActivity extends AppCompatActivity {
         if (closeDrawer()) return;
         if (!mSearchView.isIconified())
             mSearchView.onActionViewCollapsed();
-        if (getSupportFragmentManager().getBackStackEntryCount() != 0) {
+        Log.d("dong.nd1", "Count: " + getSupportFragmentManager().getBackStackEntryCount());
+        if (getSupportFragmentManager().getBackStackEntryCount() >1) {
             getSupportFragmentManager().popBackStack();
-        } else {
-            super.onBackPressed();
+            Log.d("dong.nd1", "Jump");
+            return;
+        } else if(getSupportFragmentManager().getBackStackEntryCount() == 1){
+            getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
-
-
+        super.onBackPressed();
     }
 
     private boolean closeDrawer() {

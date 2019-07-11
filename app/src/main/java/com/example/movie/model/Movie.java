@@ -3,8 +3,10 @@ package com.example.movie.model;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
+import java.io.Serializable;
+
 @Entity(tableName = "movie")
-public class Movie {
+public class Movie implements Serializable {
 
     @PrimaryKey
     private int idMovie;

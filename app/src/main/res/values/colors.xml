@@ -9,4 +9,8 @@
 
     <color name="background_list">#444444</color>
     <color name="background_item">#111111</color>
+
+    <color name="movie_overview_text_color">@android:color/black</color>
+    <color name="movie_review_text_color">@android:color/black</color>
+    <color name="red">#F44336</color>
 </resources>

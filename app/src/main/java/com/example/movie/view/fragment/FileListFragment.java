@@ -2,6 +2,7 @@ package com.example.movie.view.fragment;
 
 import android.arch.lifecycle.Observer;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,11 +20,12 @@ import com.example.movie.R;
 import com.example.movie.model.Movie;
 import com.example.movie.network.NetworkUntil;
 import com.example.movie.uitil.AppContants;
+import com.example.movie.view.activity.DetailActivity;
 import com.example.movie.viewmodel.MainController;
 
 import java.util.List;
 
-public class FileListFragment extends Fragment {
+public class FileListFragment extends Fragment implements FileListAdapter.IItemClick{
 
     public static final String FILE_LIST_TAG = "file_list_tag";
 
@@ -92,9 +94,8 @@ public class FileListFragment extends Fragment {
 
     private void initRecyclerView(){
         mListView = rootView.findViewById(R.id.list_view);
-        mAdapter = new FileListAdapter(getContext());
+        mAdapter = new FileListAdapter(getContext(), this);
         mListView.setLayoutManager(new GridLayoutManager(getContext(), COLUMN_GRID));
-        mAdapter = new FileListAdapter(getContext());
         mListView.setAdapter(mAdapter);
         mProcessLayout = rootView.findViewById(R.id.process_layout);
         mEmptyView = rootView.findViewById(R.id.empty_view);
@@ -106,5 +107,12 @@ public class FileListFragment extends Fragment {
         initRecyclerView();
     }
 
-
+    @Override
+    public void onItemClick(Movie movie) {
+        Intent intent = new Intent(getContext(), DetailActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(DetailActivity.ARG_MOVIE, movie);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
 }

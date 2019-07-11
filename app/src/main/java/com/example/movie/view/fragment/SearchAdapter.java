@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -22,10 +23,12 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchItem
     private Context mContext;
     private LayoutInflater mInflater;
     private List<Movie> mList;
+    private ISearchItemClick mItemClick;
 
-    public SearchAdapter(Context context){
+    public SearchAdapter(Context context, ISearchItemClick itemClick){
         mContext = context;
         mInflater = LayoutInflater.from(context);
+        mItemClick = itemClick;
     }
 
     @NonNull
@@ -39,13 +42,20 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchItem
 
     @Override
     public void onBindViewHolder(@NonNull SearchItemHolder searchItemHolder, int i) {
-        Movie movie = mList.get(i);
+        final Movie movie = mList.get(i);
         ThumbnailMrg.getInstance(mContext).loadThumbnail(movie.getIdMovie(), movie.getPosterPath() ,searchItemHolder.itemIcon);
         searchItemHolder.itemTitle.setText(movie.getTitle());
         searchItemHolder.itemRate.setRating(movie.getVoteAverage()/2);
         if(movie.getReleaseDate() != null && !movie.getReleaseDate().equals("")){
             searchItemHolder.itemDate.setText("ReleaseDate: "+movie.getReleaseDate());
         }
+
+        searchItemHolder.itemContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mItemClick.onSearchItemClick(movie);
+            }
+        });
 
     }
 
@@ -64,6 +74,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchItem
         private TextView itemTitle;
         private TextView itemDate;
         private RatingBar itemRate;
+        private LinearLayout itemContainer;
 
         public SearchItemHolder(View view){
             super(view);
@@ -71,7 +82,12 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchItem
             itemTitle = view.findViewById(R.id.search_item_title);
             itemDate = view.findViewById(R.id.search_item_date);
             itemRate = view.findViewById(R.id.search_item_rate);
+            itemContainer = view.findViewById(R.id.search_item_container);
         }
+    }
+
+    interface ISearchItemClick{
+        void onSearchItemClick(Movie movie);
     }
 
 }

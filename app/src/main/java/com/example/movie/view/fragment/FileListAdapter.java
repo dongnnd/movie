@@ -3,6 +3,7 @@ package com.example.movie.view.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.os.IInterface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.movie.R;
@@ -27,9 +29,11 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ItemHo
     private Context mContext;
     private LayoutInflater mInflater;
     private int mItemWidth, mItemHeight;
+    private IItemClick mItemClick;
 
-    public FileListAdapter(Context context) {
+    public FileListAdapter(Context context, IItemClick itemClick) {
         mContext = context;
+        mItemClick = itemClick;
         mInflater = LayoutInflater.from(context);
 
         // init display metrics
@@ -51,7 +55,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ItemHo
 
     @Override
     public void onBindViewHolder(@NonNull ItemHolder itemHolder, int i) {
-        Movie movie = mItem.get(i);
+        final Movie movie = mItem.get(i);
         itemHolder.tvName.setText(movie.getTitle());
 
         itemHolder.imgIcon.getLayoutParams().width = mItemWidth;
@@ -69,6 +73,13 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ItemHo
             ThumbnailMrg.getInstance(mContext).loadThumbnail(movie.getIdMovie(), movie.getPosterPath(), itemHolder.imgIcon);
         //}
 
+
+        itemHolder.itemContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mItemClick.onItemClick(movie);
+            }
+        });
     }
 
     public void updateList(List<Movie> movies) {
@@ -85,11 +96,13 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ItemHo
         private ImageView imgIcon;
         private TextView tvName;
         private ImageView[] scoreID;
+        private LinearLayout itemContainer;
 
         public ItemHolder(View view) {
             super(view);
             imgIcon = view.findViewById(R.id.item_icon);
             tvName = view.findViewById(R.id.item_name);
+            itemContainer = view.findViewById(R.id.item_container);
             addScoreId();
         }
 
@@ -101,5 +114,9 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ItemHo
             scoreID[3] = itemView.findViewById(R.id.item_score_4);
             scoreID[4] = itemView.findViewById(R.id.item_score_5);
         }
+    }
+
+    interface IItemClick{
+        void onItemClick(Movie movie);
     }
 }

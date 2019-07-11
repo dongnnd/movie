@@ -2,13 +2,13 @@ package com.example.movie.view.fragment;
 
 import android.arch.lifecycle.Observer;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +18,12 @@ import android.widget.TextView;
 import com.example.movie.R;
 import com.example.movie.model.Movie;
 import com.example.movie.network.NetworkUntil;
+import com.example.movie.view.activity.DetailActivity;
 import com.example.movie.viewmodel.SearchController;
 
 import java.util.List;
 
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment implements SearchAdapter.ISearchItemClick {
 
     public static final String SEARCH_TAG = "search_tag";
 
@@ -112,7 +113,7 @@ public class SearchFragment extends Fragment {
 
     private void initView(){
         mListItem = mRootView.findViewById(R.id.search_list);
-        mAdapter = new SearchAdapter(getContext());
+        mAdapter = new SearchAdapter(getContext(), this);
         mListItem.setAdapter(mAdapter);
         mListItem.setLayoutManager(new LinearLayoutManager(getContext()));
         mProcessBar = mRootView.findViewById(R.id.process_layout);
@@ -124,5 +125,14 @@ public class SearchFragment extends Fragment {
     public void onDestroy() {
         mController.refreshData();
         super.onDestroy();
+    }
+
+    @Override
+    public void onSearchItemClick(Movie movie) {
+        Intent intent = new Intent(getContext(), DetailActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(DetailActivity.ARG_MOVIE, movie);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 }
